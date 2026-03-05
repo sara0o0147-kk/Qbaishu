@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<!-- saved from url=(0107)file:///D:/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E8%BD%BD/%E3%80%90%E6%B5%8B%E8%AF%95%E9%A2%98%E3%80%91.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【依恋类型测试】</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #fff5f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 36px 32px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 4px 24px rgba(255,150,170,0.12);
+        }
+
+        /* 兑换码页 */
+        #code-page h1 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        #code-page p {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        #code-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #ffd6de;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: border-color 0.2s;
+        }
+        #code-input:focus { border-color: #ff8fa3; }
+        #code-error {
+            color: #ff4d6d;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+            min-height: 20px;
+        }
+
+        /* 测试页 */
+        #quiz-page { display: none; }
+        .progress-bar {
+            background: #ffe0e6;
+            border-radius: 999px;
+            height: 8px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #ff8fa3, #ff4d6d);
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.4s ease;
+        }
+        .question-num {
+            font-size: 12px;
+            color: #bbb;
+            margin-bottom: 8px;
+        }
+        .question-text {
+            font-size: 18px;
+            color: #222;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option-btn {
+            background: #fff5f7;
+            border: 2px solid #ffe0e6;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 15px;
+            color: #444;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            line-height: 1.5;
+        }
+        .option-btn:hover {
+            border-color: #ff8fa3;
+            background: #fff0f3;
+        }
+
+        /* 结果页 */
+        #result-page { display: none; text-align: center; }
+        .result-emoji { font-size: 56px; margin-bottom: 12px; }
+        .result-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff4d6d;
+            margin-bottom: 16px;
+        }
+        .result-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+        .restart-btn {
+            background: linear-gradient(135deg, #ff8fa3, #ff4d6d);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 14px 36px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .restart-btn:hover { opacity: 0.85; }
+
+        .btn {
+            background: linear-gradient(135deg, #ff8fa3, #ff4d6d);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 14px 36px;
+            font-size: 15px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ① 兑换码页 -->
+    <div id="code-page">
+        <div style="text-align:center;margin-bottom:24px;">
+            <div style="font-size:13px;color:#ff8fa3;letter-spacing:2px;margin-bottom:6px;">ATTACHMENT STYLE ASSESSMENT</div>
+            <h1 style="font-size:22px;font-weight:700;color:#222;margin-bottom:4px;">依恋类型专业测评</h1>
+            <div style="width:40px;height:2px;background:linear-gradient(90deg,#ff8fa3,#ff4d6d);margin:12px auto;border-radius:2px;"></div>
+        </div>
+
+        <div style="background:#fff5f7;border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:13px;color:#666;line-height:1.9;">
+            <div style="margin-bottom:6px;"><span style="color:#ff8fa3;font-weight:600;">专业测评</span>　基于依恋理论（Bowlby & Ainsworth），结合成人依恋访谈框架设计</div>
+            <div style="margin-bottom:6px;"><span style="color:#ff8fa3;font-weight:600;">题目数量</span>　15题，预计用时 3–5 分钟</div>
+            <div><span style="color:#ff8fa3;font-weight:600;">你的模式</span>　根据测试结果，匹配焦虑型 / 矛盾型 / 安全型 / 疏离型四种核心依恋风格</div>
+        </div>
+
+        <input type="text" id="code-input" placeholder="请输入兑换码">
+        <div id="code-error"></div>
+        <button class="btn" onclick="checkCode()">解锁测评</button>
+
+        <div style="text-align:center;margin-top:20px;font-size:11px;color:#ccc;letter-spacing:1px;">
+            千柏树 Qbaishu　版权所有，盗版必究
+        </div>
+    </div>
+
+    <!-- ② 答题页 -->
+    <div id="quiz-page">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="question-num" id="question-num">第 1 题 / 共 15 题</div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options" id="options-container"></div>
+    </div>
+
+    <!-- ③ 结果页 -->
+    <div id="result-page">
+        <div class="result-emoji" id="result-emoji"></div>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-desc" id="result-desc"></div>
+        <button class="restart-btn" onclick="restart()">再测一次</button>
+    </div>
+
+</div>
+
+<script>
+// ================================================
+// ✏️ 第一步：填写你的兑换码（可以填多个）
+// ================================================
+// 四个兑换码按天轮流，循环使用
+const ALL_CODES = ["K7M2PQ", "X4N8RT", "B3W6YJ", "H9L5CZ"];
+const todayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24)) % 4;
+const VALID_CODES = [ALL_CODES[todayIndex]];
+
+// ================================================
+// ✏️ 第二步：填写题目和选项
+// 格式：{ q: "题目", options: [{ text: "选项文字", score: 分数 }, ...] }
+// ================================================
+const questions = [
+    {
+        q: "当你喜欢的人突然变冷淡，你的第一反应是什么？",
+        options: [
+            { text: "选项A: 一定是我哪里不好，让关系变糟了。", score: 4 },
+            { text: "选项B: 他是不是遇到什么事了？我有点不安。", score: 3 },
+            { text: "选项C: 可能只是情绪波动吧，我观察一下。", score: 2 },
+            { text: "选项D: 正常，人都会有自己的节奏。", score: 1 },
+        ]
+    },
+    {
+        q: "当你和重要的人争吵，你会怎么做？",
+        options: [
+            { text: "选项A: 立刻想要解释、和好，不然我坐立难安。", score: 4 },
+            { text: "选项B: 会焦虑，但我会忍住不想太黏。", score: 3 },
+            { text: "选项C: 我能冷静下来，等双方准备好再沟通。", score: 2 },
+            { text: "选项D: 我会先独处，不急着处理。", score: 1 },
+        ]
+    },
+    {
+        q: "当对方不秒回消息时，你怎么想？",
+        options: [
+            { text: "选项A: 是不是不喜欢我了？是不是出问题了？", score: 4 },
+            { text: "选项B: 有一点不安，但能忍住不多想。", score: 3 },
+            { text: "选项C: 他可能在忙，我等下再说。", score: 2 },
+            { text: "选项D: 很正常，我不会因此情绪波动。", score: 1 },
+        ]
+    },
+    {
+        q: "在一段亲密关系里，你最怕什么？",
+        options: [
+            { text: "选项A: 被丢下，被忽视，被不要。", score: 4 },
+            { text: "选项B: 冲突升级、关系变僵。", score: 3 },
+            { text: "选项C: 双方误会太多，沟通跟不上。", score: 2 },
+            { text: "选项D: 完全不怕，我知道关系会有起伏。", score: 1 },
+        ]
+    },
+    {
+        q: "你表达想念与依赖的方式是？",
+        options: [
+            { text: "选项A: 非常明显，我需要对方也这么对我。", score: 4 },
+            { text: "选项B: 想靠近，但会克制，不想让对方压力大。", score: 3 },
+            { text: "选项C: 我会自然表达，不会过度也不会压抑。", score: 2 },
+            { text: "选项D: 我很独立，不太主动表达依恋。", score: 1 },
+        ]
+    },
+    {
+        q: "在关系中被拒绝时，你会？",
+        options: [
+            { text: "选项A: 非常痛苦，会怀疑自我价值。", score: 4 },
+            { text: "选项B: 难过，但还能慢慢调节过来。", score: 3 },
+            { text: "选项C: 会不舒服但不会想太多。", score: 2 },
+            { text: "选项D: 接受事实，我不会把拒绝当成攻击。", score: 1 },
+        ]
+    },
+    {
+        q: "你更希望对方给你哪种陪伴？",
+        options: [
+            { text: "选项A: 随时在、随时回应、随时确认。", score: 4 },
+            { text: "选项B: 稳定回应、不忽冷忽热。", score: 3 },
+            { text: "选项C: 自由同步，不黏也不淡。", score: 2 },
+            { text: "选项D: 空间跟独立的尊重。", score: 1 },
+        ]
+    },
+    {
+        q: "当关系稳定时，你的状态通常是？",
+        options: [
+            { text: "选项A: 还是会担心失去、担心变化。", score: 4 },
+            { text: "选项B: 偶尔焦虑，但总体能放松。", score: 3 },
+            { text: "选项C: 平稳安全，能相信对方。", score: 2 },
+            { text: "选项D: 非常自在，不太容易不安。", score: 1 },
+        ]
+    },
+    {
+        q: "你对“亲密”两个字的感受是？",
+        options: [
+            { text: "选项A: 渴望、依赖、很需要。", score: 4 },
+            { text: "选项B: 喜欢但会犹豫。", score: 3 },
+            { text: "选项C: 自然、舒服、没有压力。", score: 2 },
+            { text: "选项D: 有点抗拒，亲密让我紧张。", score: 1 },
+        ]
+    },
+    {
+        q: "你会在关系里牺牲很多自己吗？",
+        options: [
+            { text: "选项A: 会，我甚至不太会意识到自己在牺牲。", score: 4 },
+            { text: "选项B: 会一点，但我会努力保持平衡。", score: 3 },
+            { text: "选项C: 不会太牺牲，能保持自我。", score: 2 },
+            { text: "选项D: 不会，我界限很清楚。", score: 1 },
+        ]
+    },
+    {
+        q: "当你很想念一个人时，你会？",
+        options: [
+            { text: "选项A: 疯狂想、很痛、很折磨。", score: 4 },
+            { text: "选项B: 忍着不说，但心里会一直想。", score: 3 },
+            { text: "选项C: 自然表达想念，不会太激烈。", score: 2 },
+            { text: "选项D: 我不会太想念任何人。", score: 1 },
+        ]
+    },
+    {
+        q: "在关系中，你更像是哪种人？",
+        options: [
+            { text: "选项A: 粘人、敏感、强依恋。", score: 4 },
+            { text: "选项B: 温柔但犹豫，时近时远。", score: 3 },
+            { text: "选项C: 稳而柔软，给力也给空间。", score: 2 },
+            { text: "选项D: 自由、独立、理智型。", score: 1 },
+        ]
+    },
+    {
+        q: "冲突发生后你最常做的事？",
+        options: [
+            { text: "选项A: 立刻想修好关系，否则焦虑爆炸。", score: 4 },
+            { text: "选项B: 情绪上来但能慢慢消化。", score: 3 },
+            { text: "选项C: 先整理自己，再沟通。", score: 2 },
+            { text: "选项D: 保持距离，等自然缓解。", score: 1 },
+        ]
+    },
+    {
+        q: "你对“对方可能离开我”这个想法多常出现？",
+        options: [
+            { text: "选项A: 很常、随时都在想。", score: 4 },
+            { text: "选项B: 偶尔会，但不会失控。", score: 3 },
+            { text: "选项C: 很少出现。", score: 2 },
+            { text: "选项D: 不会出现。", score: 1 },
+        ]
+    },
+    {
+        q: "你期望的爱情是什么样？",
+        options: [
+            { text: "选项A: 时刻确认、时刻粘着、时刻在一起。", score: 4 },
+            { text: "选项B: 稳定温柔、有回应、有存在感。", score: 3 },
+            { text: "选项C: 自在流动、不黏不远。", score: 2 },
+            { text: "选项D: 自由伴随、互不束缚。", score: 1 },
+        ]
+    },
+];
+
+// ================================================
+// ✏️ 第三步：填写结果
+// 格式：{ min: 最低分, max: 最高分, emoji: "表情", title: "结果标题", desc: "结果描述" }
+// 15题x4分=最高60分，15题x1分=最低15分
+// 你可以按自己的喜好划分区间
+// ================================================
+const results = [
+    {
+        min: 48, max: 60,
+        emoji: "🌙",
+        title: "焦虑型依恋（Anxious Attachment）",
+        desc: `
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:16px;">你爱得很深，但你习惯用焦虑来确认爱是否还在。</p>
+
+<p style="margin-bottom:16px;">你的神经系统学会了把"对方的沉默"解读为危险信号。这是一种非常消耗能量的生存模式——你一直在监控，一直在解读，一直在猜测。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">在关系里，你大概是这样的：</p>
+<p style="margin-bottom:16px;">对方一点细小的变化就会触发你的警报系统。你会反复回想对话，寻找自己哪里出了错。你给予的往往多于你索取的，但你内心其实极度渴望被确认。关系越亲密，你越害怕失去。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你真正需要的：</p>
+<p style="margin-bottom:16px;">情绪一致、回应稳定的人。不是没有冲突，而是冲突之后不会消失的人。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">一件值得做的事：</p>
+<p style="margin-bottom:16px;">当焦虑升起时，先问自己：<em>这是事实，还是我的预判？</em> 区分"真实发生的事"和"我担心会发生的事"，是减少内耗的第一步。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你值得知道的一件事：</p>
+<p>焦虑型依恋通常与早期照顾者的不一致回应有关。高度的情感敏锐是它的副产品，而这种敏锐本身有很高的价值——只是需要找到更稳定的土壤来生长。</p>
+`
+    },
+    {
+        min: 36, max: 47,
+        emoji: "🌸",
+        title: "矛盾型依恋（Fearful-Avoidant）",
+        desc: `
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:16px;">你是同时渴望亲密又恐惧亲密的人。</p>
+
+<p style="margin-bottom:16px;">你曾经学到：靠近有风险，孤独有代价。于是你困在中间——想要，又不敢要。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">在关系里，你也许是这样的：</p>
+<p style="margin-bottom:16px;">对方靠近时你会退，对方退远时你又会不安。你不是在故意折腾，你只是不知道"安全的亲密"长什么样子。你会误读别人的信号，把中性的行为解读成威胁或冷落。关系稳定了反而让你坐立不安，因为你不相信它会持续。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你真正需要的：</p>
+<p style="margin-bottom:16px;">慢节奏，可预测，不会突然消失的人。你需要的不是完美的伴侣，而是一个愿意等你慢慢靠近的人。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">一件值得做的事：</p>
+<p style="margin-bottom:16px;">下次情绪升起时，先别行动。给自己两分钟，问：<em>我现在感受到的是什么？是恐惧还是真实的威胁？</em> 这个区分，比任何技巧都管用。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你值得知道的一件事：</p>
+<p>矛盾型依恋往往源于早期关系中不稳定的回应模式。这不是性格缺陷，是一种习得的生存策略。它可以改变。</p>
+`
+    },
+    {
+        min: 27, max: 35,
+        emoji: "☀️",
+        title: "安全型依恋（Secure Attachment）",
+        desc: `
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:16px;">你是少数在关系中真正感到自在的人。</p>
+
+<p style="margin-bottom:16px;">这不代表你没有情绪，而是你有能力在情绪中保持判断力。你知道关系会有起伏，但你不会因此认为关系要结束。这种稳定，是真实的内在资源，不是表演出来的。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">在关系里，你大概是这样的：</p>
+<p style="margin-bottom:16px;">你能自然表达需求，也能接受对方的需求而不感到威胁。冲突时你倾向于沟通而不是逃跑或攻击。你给对方空间，也知道自己需要什么。你是让人靠近就会放松的那种存在。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你真正需要的：</p>
+<p style="margin-bottom:16px;">诚实、对等、互相支持。你的底线简单但清晰——不需要对方完美，只需要真实。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">一件值得注意的事：</p>
+<p style="margin-bottom:16px;">安全型有时会不自觉地承担过多——成为别人的情绪容器。适度的边界不是冷漠，是可持续的善意。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你值得知道的一件事：</p>
+<p>安全型依恋是所有类型中对关系满意度影响最大的。研究显示，与安全型伴侣相处，其他依恋类型也会逐渐向安全型移动。你的稳定本身就是一种影响力。</p>
+`
+    },
+    {
+        min: 15, max: 26,
+        emoji: "🌳",
+        title: "疏离型依恋（Dismissive-Avoidant）",
+        desc: `
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:16px;">你对关系有需求，只是把它压得很深，深到有时候自己也感觉不到。</p>
+
+<p style="margin-bottom:16px;">你习惯独立解决问题，不愿麻烦别人，也不太相信靠近别人会让自己更好。这种自给自足有真实的力量，但也有真实的代价。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">在关系里，你大概是这样的：</p>
+<p style="margin-bottom:16px;">越在乎的人，你越容易保持距离。情绪来了会压下去，而不是说出来。对方表达强烈情绪时你会不舒服，甚至想退出。关心是有的，只是不知道如何在亲密中感到安全。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你真正需要的：</p>
+<p style="margin-bottom:16px;">尊重你节奏的人。不逼迫、不索取过度，但真实存在的人。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">一件值得做的事：</p>
+<p style="margin-bottom:16px;">下次有情绪时，试着用一句话说出来，不需要解释，不需要完整——只是说。<em>哪怕只是"我有点烦"</em>，这已经是打开一道缝的开始。</p>
+
+<p style="font-weight:600;color:#ff4d6d;margin-bottom:8px;">你值得知道的一件事：</p>
+<p>疏离型依恋往往形成于早期"情绪表达得不到回应"的环境。压抑情感是当时最合理的选择。但成年后的关系可以提供新的经验——前提是你愿意给它一点机会。</p>
+`
+    },
+];
+
+// ================================================
+// 以下是逻辑代码，不需要修改
+// ================================================
+let currentQ = 0;
+let totalScore = 0;
+
+function checkCode() {
+    const input = document.getElementById('code-input').value.trim().toUpperCase();
+    const valid = VALID_CODES.map(c => c.toUpperCase());
+    if (valid.includes(input)) {
+        document.getElementById('code-page').style.display = 'none';
+        document.getElementById('quiz-page').style.display = 'block';
+        showQuestion();
+    } else {
+        document.getElementById('code-error').textContent = '兑换码无效，请检查后重试';
+    }
+}
+
+function showQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('question-num').textContent = `第 ${currentQ + 1} 题 / 共 ${questions.length} 题`;
+    document.getElementById('question-text').textContent = q.q;
+    document.getElementById('progress-fill').style.width = `${(currentQ / questions.length) * 100}%`;
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => selectOption(opt.score);
+        container.appendChild(btn);
+    });
+}
+
+function selectOption(score) {
+    totalScore += score;
+    currentQ++;
+    if (currentQ < questions.length) {
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-page').style.display = 'none';
+    document.getElementById('result-page').style.display = 'block';
+
+    const result = results.find(r => totalScore >= r.min && totalScore <= r.max);
+    if (result) {
+        document.getElementById('result-emoji').textContent = result.emoji;
+        document.getElementById('result-title').textContent = result.title;
+        document.getElementById('result-desc').innerHTML = result.desc;
+    }
+}
+
+function restart() {
+    currentQ = 0;
+    totalScore = 0;
+    document.getElementById('result-page').style.display = 'none';
+    document.getElementById('quiz-page').style.display = 'block';
+    showQuestion();
+}
+
+document.getElementById('code-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkCode();
+});
+</script>
+
+
+</body></html>
