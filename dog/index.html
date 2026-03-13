@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【你是哪种狗狗？】</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #f0f7ff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 32px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 24px rgba(100,160,255,0.12);
+}
+#code-page, #quiz-page, #result-page { display: none; }
+#code-page { display: block; }
+
+.code-header { text-align:center; margin-bottom:24px; }
+.code-en { font-size:13px; color:#6ab0ff; letter-spacing:2px; margin-bottom:6px; }
+.code-title { font-size:22px; font-weight:700; color:#222; margin-bottom:4px; }
+.code-divider { width:40px; height:2px; background:linear-gradient(90deg,#6ab0ff,#3a7bd5); margin:12px auto; border-radius:2px; }
+.code-info { background:#f0f7ff; border-radius:12px; padding:16px 20px; margin-bottom:20px; font-size:13px; color:#666; line-height:1.9; }
+.code-info span { color:#3a7bd5; font-weight:600; }
+#code-input {
+    width:100%; padding:14px 16px; border:2px solid #c5deff;
+    border-radius:12px; font-size:16px; margin-bottom:8px; outline:none;
+    letter-spacing:2px; text-align:center;
+}
+#code-input:focus { border-color:#6ab0ff; }
+#code-error { color:#e05555; font-size:13px; text-align:center; min-height:20px; margin-bottom:8px; }
+.code-footer { text-align:center; margin-top:20px; font-size:11px; color:#ccc; letter-spacing:1px; }
+
+.progress-bar { height:6px; background:#ddeeff; border-radius:3px; margin-bottom:20px; }
+.progress-fill { height:100%; background:linear-gradient(90deg,#6ab0ff,#3a7bd5); border-radius:3px; transition:width 0.3s; }
+.question-num { font-size:13px; color:#6ab0ff; margin-bottom:10px; }
+.question-text { font-size:18px; font-weight:600; color:#333; margin-bottom:20px; line-height:1.6; }
+.options { display:flex; flex-direction:column; gap:12px; }
+.option-btn {
+    background:#f0f7ff; border:2px solid #c5deff; border-radius:14px;
+    padding:14px 16px; font-size:15px; color:#444; text-align:left;
+    cursor:pointer; transition:all 0.2s; line-height:1.5;
+}
+.option-btn:hover { background:#e0f0ff; border-color:#6ab0ff; }
+.option-btn.selected { background:#c5deff; border-color:#3a7bd5; }
+.nav-btns { display:flex; gap:12px; margin-top:16px; }
+.btn-back {
+    flex:1; background:none; border:1px solid #6ab0ff; color:#6ab0ff;
+    padding:10px 0; border-radius:24px; font-size:14px; cursor:pointer;
+}
+.btn-back:disabled { opacity:0.3; cursor:not-allowed; }
+.btn-next {
+    flex:1; background:#f0f0f0; border:none; color:#ccc;
+    padding:10px 0; border-radius:24px; font-size:14px; cursor:not-allowed; font-weight:600;
+}
+.btn-next.active {
+    background:linear-gradient(135deg,#6ab0ff,#3a7bd5); color:white; cursor:pointer;
+}
+
+.result-emoji { font-size:64px; text-align:center; margin-bottom:12px; }
+.result-breed { font-size:13px; color:#6ab0ff; text-align:center; letter-spacing:2px; margin-bottom:6px; }
+.result-title { font-size:22px; font-weight:700; color:#222; text-align:center; margin-bottom:20px; }
+.result-divider { width:40px; height:2px; background:linear-gradient(90deg,#6ab0ff,#3a7bd5); margin:0 auto 20px; border-radius:2px; }
+.result-desc { font-size:15px; color:#555; line-height:1.9; }
+.result-desc p { margin-bottom:14px; }
+.result-desc .label { font-weight:600; color:#3a7bd5; margin-bottom:6px; display:block; }
+.restart-btn {
+    margin-top:28px; width:100%; padding:14px;
+    background:linear-gradient(135deg,#6ab0ff,#3a7bd5);
+    border:none; border-radius:14px; color:white;
+    font-size:16px; font-weight:600; cursor:pointer;
+}
+.btn { width:100%; padding:14px; background:linear-gradient(135deg,#6ab0ff,#3a7bd5); border:none; border-radius:14px; color:white; font-size:16px; font-weight:600; cursor:pointer; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="code-page">
+    <div class="code-header">
+        <div class="code-en">DOG BREED PERSONALITY TEST</div>
+        <div class="code-title">你是哪种狗狗？</div>
+        <div class="code-divider"></div>
+    </div>
+    <div class="code-info">
+        <div style="margin-bottom:6px;"><span>测评说明</span>　根据你的性格与行为习惯，匹配最像你的狗狗品种</div>
+        <div style="margin-bottom:6px;"><span>题目数量</span>　20题，预计用时 3–5 分钟</div>
+        <div><span>结果类型</span>　结果因人而异，每个灵魂都住着一只狗狗 🐶</div>
+    </div>
+    <input type="text" id="code-input" placeholder="请输入兑换码">
+    <div id="code-error"></div>
+    <button class="btn" onclick="checkCode()">解锁测评</button>
+    <div class="code-footer">千柏树 Qbaishu　版权所有，盗版必究</div>
+</div>
+
+<div id="quiz-page">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="question-num" id="question-num"></div>
+    <div class="question-text" id="question-text"></div>
+    <div class="options" id="options-container"></div>
+    <div class="nav-btns">
+        <button class="btn-back" id="back-btn" onclick="goBack()">← 上一题</button>
+        <button class="btn-next" id="next-btn" onclick="goNext()">下一题 →</button>
+    </div>
+</div>
+
+<div id="result-page">
+    <div class="result-emoji" id="result-emoji"></div>
+    <div class="result-breed" id="result-breed"></div>
+    <div class="result-title" id="result-title"></div>
+    <div class="result-divider"></div>
+    <div class="result-desc" id="result-desc"></div>
+    <div id="result-match" style="margin-top:20px;background:#f0f7ff;border-radius:14px;padding:16px 20px;"></div>
+    <button class="restart-btn" onclick="restart()">再测一次</button>
+</div>
+
+</div>
+<script>
+const ALL_CODES = ["K7M2PQ", "X4N8RT", "B3W6YJ", "H9L5CZ"];
+const todayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24)) % 4;
+const VALID_CODES = [ALL_CODES[todayIndex]];
+
+// 品种顺序：[金毛(0), 拉布拉多(1), 边牧(2), 比格(3), 萨摩耶(4), 秋田(5), 德牧(6), 杜宾(7), 西高地白梗(8), 巴吉度(9)]
+
+const questions = [
+    {
+        q: "你平时和陌生人相处是什么感觉？",
+        options: [
+            { text: "很自然，很快就能聊起来", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "需要观察一下，确认对方是好人再接近", scores: [0,0,2,0,0,2,2,0,0,0] },
+            { text: "有点警惕，不太主动打招呼", scores: [0,0,0,0,0,2,2,2,0,0] },
+            { text: "无所谓，反正我自己就能过得很好", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你的日常状态更像哪种？",
+        options: [
+            { text: "精力充沛，总想找事做", scores: [0,0,2,0,0,0,0,2,0,0] },
+            { text: "活泼开朗，跟谁都玩得来", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "沉稳冷静，行动前先思考", scores: [0,0,0,0,0,2,2,2,0,0] },
+            { text: "懒洋洋的，能不动就不动", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你对在乎的人通常是怎样的？",
+        options: [
+            { text: "全力付出，恨不得黏在一起", scores: [2,2,0,0,2,0,0,0,0,0] },
+            { text: "默默守护，用行动而不是言语", scores: [0,0,0,0,0,2,2,0,0,0] },
+            { text: "忠诚但保持适当距离", scores: [0,0,2,0,0,0,0,2,0,0] },
+            { text: "随缘，对谁都差不多好", scores: [0,0,0,2,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你对规则和纪律的态度是？",
+        options: [
+            { text: "很好，我做事喜欢有章法", scores: [0,0,2,0,0,0,2,2,0,0] },
+            { text: "一般，规则能遵守但不想太拘束", scores: [2,2,0,2,0,0,0,0,0,0] },
+            { text: "不太喜欢，我有自己的节奏", scores: [0,0,0,0,2,2,0,0,2,2] },
+            { text: "随意，怎么舒服怎么来", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "面对压力你通常会？",
+        options: [
+            { text: "找朋友倾诉，需要有人陪", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "冷静分析，一个人解决", scores: [0,0,2,0,0,2,2,2,0,0] },
+            { text: "转移注意力，出去动一动", scores: [0,0,2,0,0,0,0,0,2,0] },
+            { text: "睡一觉，明天再说", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "你的好奇心强吗？",
+        options: [
+            { text: "非常强，看到新东西就想去探索", scores: [0,0,2,2,0,0,0,0,2,0] },
+            { text: "有好奇心，但会先评估再行动", scores: [0,0,0,0,0,2,2,0,0,0] },
+            { text: "一般，熟悉的东西就够了", scores: [2,2,0,0,2,0,0,0,0,0] },
+            { text: "不太好奇，懒得折腾", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "你觉得自己更擅长？",
+        options: [
+            { text: "与人相处，温暖和治愈别人", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "完成任务，高效执行", scores: [0,0,2,0,0,0,2,2,0,0] },
+            { text: "观察和分析，想清楚再动", scores: [0,0,0,0,0,2,0,2,0,0] },
+            { text: "独处，自得其乐", scores: [0,0,0,0,0,2,0,0,2,2] }
+        ]
+    },
+    {
+        q: "有人批评你，你的第一反应是？",
+        options: [
+            { text: "有点难受，但很快就原谅对方了", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "认真思考批评是否有道理", scores: [0,0,2,0,0,0,2,0,0,0] },
+            { text: "表面平静，但内心会记住", scores: [0,0,0,0,0,2,0,2,0,0] },
+            { text: "不太在意，很快就忘了", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你更喜欢哪种生活节奏？",
+        options: [
+            { text: "热热闹闹，身边总有人", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "有目标有计划，充实而稳定", scores: [0,0,2,0,0,0,2,2,0,0] },
+            { text: "安静规律，不需要太多变化", scores: [0,0,0,0,0,2,0,0,0,2] },
+            { text: "自由散漫，随心所欲", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你对食物的态度是？",
+        options: [
+            { text: "爱吃，吃是很重要的事", scores: [2,2,0,2,0,0,0,0,0,2] },
+            { text: "吃饱就好，不太执着", scores: [0,0,2,0,0,2,2,2,0,0] },
+            { text: "有自己的品味，不合口的不吃", scores: [0,0,0,0,2,2,0,0,2,0] },
+            { text: "随便，给什么吃什么", scores: [0,0,0,2,0,0,0,0,0,0] }
+        ]
+    },
+    {
+        q: "你在一个群体中通常是什么角色？",
+        options: [
+            { text: "开心果，让大家都轻松的那个", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "靠谱的人，出事了大家找你", scores: [0,0,0,0,0,0,2,2,0,0] },
+            { text: "独行侠，可以融入但更享受独处", scores: [0,0,2,0,0,2,0,0,2,0] },
+            { text: "旁观者，看着就好，不太参与", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "你平时运动量大吗？",
+        options: [
+            { text: "很大，停不下来", scores: [0,0,2,0,0,0,0,2,2,0] },
+            { text: "适中，需要就动", scores: [2,2,0,2,0,0,2,0,0,0] },
+            { text: "不太多，偶尔动一下", scores: [0,0,0,0,2,2,0,0,0,0] },
+            { text: "很少，能躺着就不动", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "你如何看待忠诚？",
+        options: [
+            { text: "非常重要，我对认可的人完全忠诚", scores: [2,2,0,0,0,2,2,0,0,0] },
+            { text: "重要，但前提是对方值得", scores: [0,0,2,0,0,2,0,2,0,0] },
+            { text: "随缘，关系到了自然忠诚", scores: [0,0,0,2,2,0,0,0,0,0] },
+            { text: "没想太多，顺其自然", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你会主动撒娇吗？",
+        options: [
+            { text: "会，非常擅长，效果很好🤣", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "偶尔会，但不太自然", scores: [0,0,0,0,0,0,2,0,2,0] },
+            { text: "不会，觉得别扭", scores: [0,0,2,0,0,2,0,2,0,0] },
+            { text: "不需要，我自己就能过得好", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "当你不开心的时候，你希望别人怎么做？",
+        options: [
+            { text: "陪着我，说说话，抱抱我", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "给我空间，我需要自己消化", scores: [0,0,2,0,0,2,0,2,0,2] },
+            { text: "帮我解决问题，行动比安慰有用", scores: [0,0,0,0,0,0,2,2,0,0] },
+            { text: "假装什么都没发生，继续正常相处", scores: [0,0,0,0,0,0,0,0,2,0] }
+        ]
+    },
+    {
+        q: "你觉得自己最大的优点是？",
+        options: [
+            { text: "真诚，对人没有心机", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "可靠，说到做到", scores: [0,0,2,0,0,0,2,2,0,0] },
+            { text: "独立，不依赖任何人", scores: [0,0,0,0,0,2,0,0,2,2] },
+            { text: "冷静，不容易被情绪左右", scores: [0,0,0,0,0,2,2,2,0,0] }
+        ]
+    },
+    {
+        q: "你对工作/学习的态度？",
+        options: [
+            { text: "认真投入，喜欢有成就感的感觉", scores: [0,0,2,0,0,0,2,2,0,0] },
+            { text: "努力但不死板，会找方法偷懒🤣", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "按自己节奏来，不喜欢被催", scores: [0,0,0,0,0,2,0,0,2,2] },
+            { text: "能过就好，不想太拼", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    },
+    {
+        q: "你给人的第一印象通常是？",
+        options: [
+            { text: "热情友好，很好接近", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "冷静可靠，让人放心", scores: [0,0,0,0,0,0,2,2,0,0] },
+            { text: "高冷神秘，让人猜不透", scores: [0,0,2,0,0,2,0,0,0,0] },
+            { text: "随和低调，存在感不强", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你如何处理冲突？",
+        options: [
+            { text: "尽量化解，不喜欢对立", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "直接表明立场，不绕弯子", scores: [0,0,0,0,0,0,2,2,0,0] },
+            { text: "冷处理，等对方冷静再说", scores: [0,0,2,0,0,2,0,0,0,0] },
+            { text: "能避开就避开，懒得争", scores: [0,0,0,0,0,0,0,0,2,2] }
+        ]
+    },
+    {
+        q: "你觉得自己内心深处最渴望的是？",
+        options: [
+            { text: "被爱和陪伴，有人一直在", scores: [2,2,0,2,2,0,0,0,0,0] },
+            { text: "被信任和重视，有人需要我", scores: [0,0,0,0,0,0,2,2,0,0] },
+            { text: "自由和尊重，按自己的方式活", scores: [0,0,2,0,0,2,0,0,2,0] },
+            { text: "平静和安稳，不要太多波澜", scores: [0,0,0,0,0,0,0,0,0,2] }
+        ]
+    }
+];
+
+const breeds = [
+    {
+        name: "金毛寻回犬",
+        en: "Golden Retriever",
+        emoji: "🐕",
+        desc: `
+<p><span class="label">你是金毛。</span>温暖、真诚、对谁都好。你天生有一种让人放松的能量，靠近你的人很难不喜欢你。你不喜欢冲突，喜欢用善意去化解一切。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你付出很多，有时候多到忘了留一点给自己。你需要被人看见、被肯定，因为你一直在给出温暖，也渴望被温暖包围。</p>
+<p><span class="label">值得知道的一件事：</span>金毛的善良不是软弱，但偶尔也要学会说"不"。你不需要用无限付出来换取被爱。</p>
+`
+    },
+    {
+        name: "拉布拉多",
+        en: "Labrador Retriever",
+        emoji: "🦮",
+        desc: `
+<p><span class="label">你是拉布拉多。</span>开朗、随和、没有心机。你对生活有一种天然的热情，很难被打倒，也很少让人感到有压力。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你是那种让人觉得安心的存在——不复杂，不算计，就是真实地存在。你的情绪稳定是真实的，不是被压抑的结果。</p>
+<p><span class="label">值得知道的一件事：</span>拉布拉多的好脾气有时候会让人觉得你没有边界。偶尔表达一下自己的需求，不会让人不喜欢你。</p>
+`
+    },
+    {
+        name: "边境牧羊犬",
+        en: "Border Collie",
+        emoji: "🐾",
+        desc: `
+<p><span class="label">你是边牧。</span>聪明、专注、对自己要求高。你有很强的目标感，一旦决定了什么就会全力以赴。你并非不爱玩，只是更享受有意义的事情。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你对自己在乎的事情和人非常投入，但你也需要足够的空间来做自己的事。束缚感对你来说很难受。</p>
+<p><span class="label">值得知道的一件事：</span>边牧容易想太多，把简单的事复杂化。有时候放下"最优解"，顺其自然也没关系。</p>
+`
+    },
+    {
+        name: "比格犬",
+        en: "Beagle",
+        emoji: "🐶",
+        desc: `
+<p><span class="label">你是比格。</span>好奇心旺盛，随和，对世界充满兴趣。你很容易相处，不挑剔，也不太记仇，是那种走到哪里都能融入的存在。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你喜欢探索，喜欢新鲜感，偶尔会被有趣的事情分散注意力。你偶尔会因为好奇心太强被误解成不专一。</p>
+<p><span class="label">值得知道的一件事：</span>比格的鼻子很灵，总能找到有趣的事。这是天赋，但有时候也要学会聚焦在真正重要的事上。</p>
+`
+    },
+    {
+        name: "萨摩耶",
+        en: "Samoyed",
+        emoji: "☁️",
+        desc: `
+<p><span class="label">你是萨摩耶。</span>开朗、活泼、笑容让人融化。你有一种自带阳光的气质，很难在你身边感到压抑。你享受热闹，享受被喜欢，也真心喜欢别人。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你对感情很投入，喜欢黏着在乎的人。你需要互动和回应，沉默和冷漠对你来说很难消化。</p>
+<p><span class="label">值得知道的一件事：</span>萨摩耶的快乐是真实的，但偶尔也有不快乐的时候。不用一直笑，真实的情绪也值得被接纳。</p>
+`
+    },
+    {
+        name: "秋田犬",
+        en: "Akita",
+        emoji: "🦊",
+        desc: `
+<p><span class="label">你是秋田。</span>忠诚、沉稳、有自己的原则。你不轻易打开，但一旦认定了一个人就是真心的。你对外表现冷静，内心其实有很深的情感。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你对不熟悉的人有戒心，但对信任的人愿意付出一切。你不需要太多人，只需要真的懂你的那几个。</p>
+<p><span class="label">值得知道的一件事：</span>秋田的忠诚是稀有的。但偶尔让别人看到你的内心，不会让你失去那份厚重感。</p>
+`
+    },
+    {
+        name: "德国牧羊犬",
+        en: "German Shepherd",
+        emoji: "🐕‍🦺",
+        desc: `
+<p><span class="label">你是德牧。</span>可靠、果断、有责任感。你做事认真，不喜欢拖拖拉拉，对自己和身边的人都有一定要求。你不是严肃，只是认真对待每一件事。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你是那种出事了大家第一个想到的人。你保护在乎的人，但有时候会用"负责"来压抑自己的情绪需求。</p>
+<p><span class="label">值得知道的一件事：</span>德牧可以是别人的依靠，但自己也需要有可以靠的人。学会接受帮助，和给出帮助一样重要。</p>
+`
+    },
+    {
+        name: "杜宾犬",
+        en: "Doberman",
+        emoji: "🖤",
+        desc: `
+<p><span class="label">你是杜宾。</span>冷静、聪明、有气场。你并非冷漠，只是不会轻易把情绪挂在脸上。你的存在感很强，就算不说话，也让人感觉到你在那里。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你对认可的人忠诚而深沉，但你的情感表达比较克制，别人有时候猜不透你。你需要对方有足够的耐心来靠近你。</p>
+<p><span class="label">值得知道的一件事：</span>杜宾的深情藏得很深。偶尔让人看见，不是示弱，是可以让关系走得更近的一种方式。</p>
+`
+    },
+    {
+        name: "西高地白梗",
+        en: "West Highland Terrier",
+        emoji: "🤍",
+        desc: `
+<p><span class="label">你是西高地白梗。</span>独立、傲娇、有自己的想法。你不太在意别人的眼光，按自己的节奏生活。你并非不好相处，只是需要对方理解你的独立。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你偶尔会撒娇，但不会让人觉得你依赖他。你给人的感觉是"我可以不需要你，但我选择陪着你"，这种感觉很有魅力。</p>
+<p><span class="label">值得知道的一件事：</span>西高地的独立是真实的底气。但偶尔放下那点傲娇，让别人进来一点，关系会更深。</p>
+`
+    },
+    {
+        name: "巴吉度猎犬",
+        en: "Basset Hound",
+        emoji: "😴",
+        desc: `
+<p><span class="label">你是巴吉度。</span>佛系、随和、对生活没有太多要求。你不焦虑，不争抢，有一种天然的平静感。待在你身边的人会不自觉地放慢节奏。</p>
+<p><span class="label">在关系里，你大概是这样的：</span>你不会主动制造麻烦，也不容易被激怒。你的存在本身就是一种安定，不过有时候会被人误以为你不在乎。</p>
+<p><span class="label">值得知道的一件事：</span>巴吉度的平静不是冷漠，是真实的淡然。偶尔表达一下你在乎，让身边的人知道你是认真的。</p>
+`
+    }
+];
+
+let currentQ = 0;
+let answers = [];
+
+function checkCode() {
+    const input = document.getElementById('code-input').value.trim().toUpperCase();
+    const valid = VALID_CODES.map(c => c.toUpperCase());
+    if (valid.includes(input)) {
+        document.getElementById('code-page').style.display = 'none';
+        document.getElementById('quiz-page').style.display = 'block';
+        showQuestion();
+    } else {
+        document.getElementById('code-error').textContent = '兑换码无效，请检查后重试';
+    }
+}
+
+function showQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('question-num').textContent = `第 ${currentQ + 1} 题 / 共 ${questions.length} 题`;
+    document.getElementById('question-text').textContent = q.q;
+    document.getElementById('progress-fill').style.width = `${(currentQ / questions.length) * 100}%`;
+
+    const backBtn = document.getElementById('back-btn');
+    backBtn.disabled = currentQ === 0;
+
+    const nextBtn = document.getElementById('next-btn');
+    const hasAnswer = answers[currentQ] !== undefined;
+    nextBtn.className = 'btn-next' + (hasAnswer ? ' active' : '');
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    const prevIndex = answers[currentQ];
+    q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn' + (prevIndex === i ? ' selected' : '');
+        btn.textContent = opt.text;
+        btn.onclick = () => selectOption(i, btn, container);
+        container.appendChild(btn);
+    });
+}
+
+function selectOption(index, btn, container) {
+    container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[currentQ] = index;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.className = 'btn-next active';
+}
+
+function goBack() {
+    if (currentQ > 0) { currentQ--; showQuestion(); }
+}
+
+function goNext() {
+    if (answers[currentQ] === undefined) return;
+    currentQ++;
+    if (currentQ < questions.length) {
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-page').style.display = 'none';
+    document.getElementById('result-page').style.display = 'block';
+
+    const breedScores = new Array(10).fill(0);
+    answers.forEach((idx, qIdx) => {
+        const scores = questions[qIdx].options[idx].scores;
+        scores.forEach((s, b) => { breedScores[b] += s; });
+    });
+
+    const maxScore = Math.max(...breedScores);
+    const winnerIndex = breedScores.indexOf(maxScore);
+    const winner = breeds[winnerIndex];
+
+    document.getElementById('result-emoji').textContent = winner.emoji;
+    document.getElementById('result-breed').textContent = winner.en;
+    document.getElementById('result-title').textContent = `你是${winner.name}`;
+    document.getElementById('result-desc').innerHTML = winner.desc;
+
+    const breedNames = ['金毛寻回犬','拉布拉多','边境牧羊犬','比格犬','萨摩耶','秋田犬','德国牧羊犬','杜宾犬','西高地白梗','巴吉度猎犬'];
+    const sorted = breedScores.map((s,i) => ({i, s})).sort((a,b) => b.s - a.s);
+    const top3 = sorted.slice(0,3).map(x => breedNames[x.i]);
+    document.getElementById('result-match').innerHTML = `
+        <div style="font-size:13px;color:#6ab0ff;font-weight:600;margin-bottom:8px;">✦ 与你最契合的狗狗品种</div>
+        <div style="font-size:15px;color:#444;line-height:2;">
+            🥇 ${top3[0]}<br>
+            🥈 ${top3[1]}<br>
+            🥉 ${top3[2]}
+        </div>
+    `;
+}
+
+function restart() {
+    currentQ = 0;
+    answers = [];
+    document.getElementById('result-page').style.display = 'none';
+    document.getElementById('quiz-page').style.display = 'block';
+    showQuestion();
+}
+
+document.getElementById('code-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkCode();
+});
+</script>
+</body>
+</html>
