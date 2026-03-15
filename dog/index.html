@@ -67,6 +67,7 @@ body {
 
 .result-emoji { font-size:64px; text-align:center; margin-bottom:12px; }
 .result-breed { font-size:13px; color:#6ab0ff; text-align:center; letter-spacing:2px; margin-bottom:6px; }
+.result-img { width:100%; max-height:240px; object-fit:cover; border-radius:14px; margin-bottom:20px; }
 .result-title { font-size:22px; font-weight:700; color:#222; text-align:center; margin-bottom:20px; }
 .result-divider { width:40px; height:2px; background:linear-gradient(90deg,#6ab0ff,#3a7bd5); margin:0 auto 20px; border-radius:2px; }
 .result-desc { font-size:15px; color:#555; line-height:1.9; }
@@ -113,6 +114,7 @@ body {
 </div>
 
 <div id="result-page">
+    <img id="result-img" class="result-img" src="" alt="" style="display:none;">
     <div class="result-emoji" id="result-emoji"></div>
     <div class="result-breed" id="result-breed"></div>
     <div class="result-title" id="result-title"></div>
@@ -315,6 +317,7 @@ const questions = [
 
 const breeds = [
     {
+        img: "https://images.unsplash.com/photo-1612774412771-005ed8e861d2?w=700&auto=format&fit=crop&q=60",
         name: "金毛寻回犬",
         en: "Golden Retriever",
         emoji: "🐕",
@@ -325,6 +328,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1554456854-55a089fd4cb2?w=700&auto=format&fit=crop&q=60",
         name: "拉布拉多",
         en: "Labrador Retriever",
         emoji: "🦮",
@@ -335,6 +339,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1708787786119-9bcade6ffa21?w=700&auto=format&fit=crop&q=60",
         name: "边境牧羊犬",
         en: "Border Collie",
         emoji: "🐾",
@@ -345,6 +350,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1591539652957-ffdd6c7914c6?w=700&auto=format&fit=crop&q=60",
         name: "比格犬",
         en: "Beagle",
         emoji: "🐶",
@@ -355,6 +361,7 @@ const breeds = [
 `
     },
     {
+        img: "https://plus.unsplash.com/premium_photo-1674236550362-58a7fdd7f899?w=700&auto=format&fit=crop&q=60",
         name: "萨摩耶",
         en: "Samoyed",
         emoji: "☁️",
@@ -365,6 +372,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1730402739842-fbfe757d417e?w=700&auto=format&fit=crop&q=60",
         name: "秋田犬",
         en: "Akita",
         emoji: "🦊",
@@ -375,6 +383,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1513350660342-816d92510adf?w=700&auto=format&fit=crop&q=60",
         name: "德国牧羊犬",
         en: "German Shepherd",
         emoji: "🐕‍🦺",
@@ -385,6 +394,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1485873402302-54d29627d4dc?w=700&auto=format&fit=crop&q=60",
         name: "杜宾犬",
         en: "Doberman",
         emoji: "🖤",
@@ -395,6 +405,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1553776590-89774e24b34a?w=700&auto=format&fit=crop&q=60",
         name: "西高地白梗",
         en: "West Highland Terrier",
         emoji: "🤍",
@@ -405,6 +416,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1619754226711-70ab984d068a?w=700&auto=format&fit=crop&q=60",
         name: "巴吉度猎犬",
         en: "Basset Hound",
         emoji: "😴",
@@ -491,6 +503,11 @@ function showResult() {
     const maxScore = Math.max(...breedScores);
     const winnerIndex = breedScores.indexOf(maxScore);
     const winner = breeds[winnerIndex];
+
+    const imgEl = document.getElementById('result-img');
+    imgEl.src = winner.img;
+    imgEl.alt = winner.name;
+    imgEl.style.display = 'block';
 
     document.getElementById('result-emoji').textContent = winner.emoji;
     document.getElementById('result-breed').textContent = winner.en;
