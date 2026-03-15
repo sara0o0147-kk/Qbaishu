@@ -70,6 +70,7 @@ body {
 /* 结果页 */
 .result-emoji { font-size:64px; text-align:center; margin-bottom:12px; }
 .result-breed { font-size:13px; color:#ff8fa3; text-align:center; letter-spacing:2px; margin-bottom:6px; }
+.result-img { width:100%; max-height:240px; object-fit:cover; border-radius:14px; margin-bottom:20px; }
 .result-title { font-size:22px; font-weight:700; color:#222; text-align:center; margin-bottom:20px; }
 .result-divider { width:40px; height:2px; background:linear-gradient(90deg,#ff8fa3,#ff4d6d); margin:0 auto 20px; border-radius:2px; }
 .result-desc { font-size:15px; color:#555; line-height:1.9; }
@@ -119,6 +120,7 @@ body {
 
 <!-- 结果页 -->
 <div id="result-page">
+    <img id="result-img" class="result-img" src="" alt="" style="display:none;">
     <div class="result-emoji" id="result-emoji"></div>
     <div class="result-breed" id="result-breed"></div>
     <div class="result-title" id="result-title"></div>
@@ -322,6 +324,7 @@ const questions = [
 
 const breeds = [
     {
+        img: "https://images.unsplash.com/photo-1633894660288-003802421573?q=80&w=700&auto=format&fit=crop",
         name: "布偶猫",
         en: "Ragdoll",
         emoji: "🐱",
@@ -332,6 +335,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1617227789575-97fa0d5a2f88?w=700&auto=format&fit=crop&q=60",
         name: "波斯猫",
         en: "Persian",
         emoji: "😸",
@@ -342,6 +346,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1758503159073-4cd048187dd8?w=700&auto=format&fit=crop&q=60",
         name: "暹罗猫",
         en: "Siamese",
         emoji: "🐈",
@@ -352,6 +357,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1685781792000-fdd41929615b?w=700&auto=format&fit=crop&q=60",
         name: "阿比西尼亚猫",
         en: "Abyssinian",
         emoji: "🦁",
@@ -362,6 +368,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1683561557911-237aa768254b?w=700&auto=format&fit=crop&q=60",
         name: "英国短毛猫",
         en: "British Shorthair",
         emoji: "😺",
@@ -372,6 +379,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1685271287715-12dfe4d9ed0d?w=700&auto=format&fit=crop&q=60",
         name: "缅因猫",
         en: "Maine Coon",
         emoji: "🐾",
@@ -382,6 +390,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1496890666403-e6cf521841e6?w=700&auto=format&fit=crop&q=60",
         name: "孟加拉猫",
         en: "Bengal",
         emoji: "🐆",
@@ -392,6 +401,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1685903824251-d1711e64d5e0?w=700&auto=format&fit=crop&q=60",
         name: "俄罗斯蓝猫",
         en: "Russian Blue",
         emoji: "💙",
@@ -402,6 +412,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1771820246981-28377c2a5f32?w=700&auto=format&fit=crop&q=60",
         name: "狸花猫",
         en: "Chinese Li Hua",
         emoji: "🌿",
@@ -412,6 +423,7 @@ const breeds = [
 `
     },
     {
+        img: "https://images.unsplash.com/photo-1697480605044-14a335130dee?w=700&auto=format&fit=crop&q=60",
         name: "橘猫",
         en: "Orange Tabby",
         emoji: "🧡",
@@ -504,6 +516,12 @@ function showResult() {
     const maxScore = Math.max(...breedScores);
     const winnerIndex = breedScores.indexOf(maxScore);
     const winner = breeds[winnerIndex];
+
+    // 显示猫咪图片
+    const imgEl = document.getElementById('result-img');
+    imgEl.src = winner.img;
+    imgEl.alt = winner.name;
+    imgEl.style.display = 'block';
 
     document.getElementById('result-emoji').textContent = winner.emoji;
     document.getElementById('result-breed').textContent = winner.en;
